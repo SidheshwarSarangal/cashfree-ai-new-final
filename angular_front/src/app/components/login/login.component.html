@@ -1,0 +1,47 @@
+<!-- Modal Background -->
+<div class="fixed z-50 inset-0 flex items-center justify-center" style="background: rgba(0, 0, 0, 0.4);" (click)="closeModal()">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-96 relative" (click)="$event.stopPropagation()">
+        
+                
+        <!-- Signup Form -->
+        <div *ngIf="isSignup">
+            <h2 class="text-xl font-bold mb-4 text-center">Sign Up</h2>
+            <form class="flex flex-col space-y-4">
+                <input type="text" placeholder="Full Name" [(ngModel)]="name" name="name" class="border p-2 rounded">
+                <input type="text" placeholder="Email" [(ngModel)]="email" name="email" class="border p-2 rounded">
+                
+                <!-- OTP Section -->
+                <div *ngIf="!otpSent && !otpVerified">
+                    <button type="button" class="bg-blue-500 text-white p-2 rounded w-full" (click)="sendOtp()">Send OTP</button>
+                </div>
+
+                <div *ngIf="otpSent">
+                    <input type="text" placeholder="Enter OTP" [(ngModel)]="otp" name="otp" class="border p-2 rounded">
+                    <button type="button" class="bg-green-500 text-white p-2 mt-3 rounded w-full" (click)="verifyOtp()">Verify OTP</button>
+                </div>
+
+                <!-- Password Fields (Only shown after OTP is verified) -->
+                <div *ngIf="otpVerified">
+                    <input type="password" placeholder="Password" [(ngModel)]="password" name="password" class="border p-2 rounded">
+                    <input type="password" placeholder="Confirm Password" [(ngModel)]="confirmPassword" name="confirmPassword" class="border p-2 mt-3 rounded">
+                    <button type="submit" (click)="signup()" class="bg-black text-white p-2 mt-3 rounded w-full">Sign Up</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Login Form -->
+        <div *ngIf="!isSignup">
+            <h2 class="text-xl font-bold mb-4 text-center">Login</h2>
+            <form class="flex flex-col space-y-4">
+                <input type="text" placeholder="Email" [(ngModel)]="email" name="email" class="border p-2 rounded">
+                <input type="password" placeholder="Password" [(ngModel)]="password" name="password" class="border p-2 rounded">
+                <button type="submit" (click)="login()" class="bg-black text-white p-2 rounded w-full">Login</button>
+            </form>
+        </div>
+
+        <!-- Toggle Login/Signup (Bottom Left) -->
+        <p class="text-blue-500 text-left mt-4 cursor-pointer" (click)="toggleForm()">
+            {{ isSignup ? 'Login' : 'Create Account' }}
+        </p>
+    </div>
+</div>

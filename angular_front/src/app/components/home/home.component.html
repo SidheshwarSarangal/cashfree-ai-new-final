@@ -1,0 +1,140 @@
+<div class="cursor-default">
+
+  <div class="min-h-screen bg-gray-100 p-6 space-y-12">
+    <div class=" mx-auto mt-10 w-[90%] md:w-[60%] space-y-12">
+
+      <!-- Main Heading -->
+      <div class="text-center">
+        <h1
+          class="text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-purple-900 to-purple-300 animate-gradient">
+          Unleash the power of AI
+        </h1>
+      </div>
+
+      <!-- Typing Effect -->
+      <div class="text-center -mt-4">
+        <h2 class="text-3xl font-semibold text-gray-800">
+          {{ typingText }}<span class="animate-pulse">|</span>
+        </h2>
+      </div>
+
+      <!-- Rotating Image Cards -->
+      <div class="grid mt-4 md:grid-cols-3 gap-6">
+        <div
+          *ngFor="let card of cards; let i = index"
+          [ngClass]="{ 'opacity-100': currentCardIndex === i, 'opacity-40': currentCardIndex !== i }"
+          class="transition-all duration-300 rounded-xl shadow-lg bg-white p-4 hover:scale-105">
+          <img [src]="card.imageUrl" alt="Card Image"
+            class="w-full h-40 object-cover rounded-md mb-4">
+          <h3 class="text-xl font-semibold mb-2">{{ card.title }}</h3>
+          <p class="text-gray-600">{{ card.description }}</p>
+        </div>
+      </div>
+
+      <!-- Some Informational Text -->
+      <div class="text-center max-w-3xl mx-auto text-gray-700 text-lg">
+        <p>
+          Discover the potential of artificial intelligence and how it's
+          changing the world—from automating tasks to breaking language
+          barriers.
+        </p>
+      </div>
+
+      <!-- Subscribe Button -->
+
+      <!-- Subscribed Banner -->
+      <div *ngIf="isSubscribed"
+        class="bg-green-100 text-green-800 font-semibold text-center py-3 px-6 rounded mb-6 w-fit mx-auto shadow">
+        🎉 You are already subscribed!
+      </div>
+
+      <!-- Pricing Boxes -->
+      <div *ngIf="!isSubscribed" id="pricing"
+        class="flex flex-col md:flex-row justify-center items-center gap-6 mt-4 px-4">
+
+        <!-- Monthly Plan -->
+        <div
+          class="bg-purple-700 px-3 py-3 rounded-lg shadow-xl w-64 md:w-72  h-72  flex flex-col justify-center items-center space-y-4 text-white">
+          <h3 class="text-4xl font-bold">Rs 200</h3>
+          <p class="text-center px-4">Billed monthly. Up to 12 payments.</p>
+          <div class="h-10">
+            <button
+              (click)="subscribe('monthly')"
+              class="px-4 py-2 bg-white text-blue-600 font-semibold rounded hover:bg-gray-100">
+              Subscribe
+            </button>
+          </div>
+        </div>
+
+        <!-- Quarterly Plan -->
+        <div
+          class="bg-blue-800 rounded-lg px-3 py-3 shadow-lg w-64 md:w-72  h-72 flex flex-col justify-center items-center space-y-4 text-white">
+          <h3 class="text-4xl font-bold">Rs 500</h3>
+          <p class="text-center px-4">Billed every 3 months. Max 4 payments.</p>
+          <div class="h-10">
+            <button
+              (click)="subscribe('quarterly')"
+              class="px-4 py-2 bg-white text-blue-600 font-semibold rounded hover:bg-gray-100">
+              Subscribe
+            </button>
+          </div>
+        </div>
+
+        <!-- Yearly Plan -->
+        <div
+          class="bg-emerald-700 rounded-lg px-3 py-3 shadow-lg w-64 md:w-72  h-72  flex flex-col justify-center items-center space-y-4 text-white">
+          <h3 class="text-4xl font-bold">Rs 1500</h3>
+          <p class="text-center px-4">One-time yearly billing.</p>
+          <div class="h-10">
+            <button
+              (click)="subscribe('yearly')"
+              class="px-4 py-2 bg-white text-blue-600 font-semibold rounded hover:bg-gray-100">
+              Subscribe
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Ending Text -->
+      <div class="text-center max-w-2xl mx-auto text-gray-600 text-md">
+        <p>Ready to explore more? Use this appliaction to help you perform your
+          day to day desktop tasks and make evrything easy for you!!!!</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div
+    *ngIf="showPopup"
+    class="fixed inset-0  flex items-center justify-center z-50"
+    style="background: rgba(0, 0, 0, 0.4);">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-80 text-center">
+      <ng-container *ngIf="month">
+        <app-monthly-subscription-pay
+          [email]="email"
+          [name]="userName">
+        </app-monthly-subscription-pay>
+      </ng-container>
+      <p *ngIf="quarter">
+        <app-quarternary-subscription-pay
+          [email]="email"
+          [name]="userName">
+        </app-quarternary-subscription-pay>
+      </p>
+      <p *ngIf="year">
+        <app-yearly-subscription-pay
+          [email]="email"
+          [name]="userName">
+        </app-yearly-subscription-pay>
+      </p>
+
+      <button
+        class="mt-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        (click)="closePopup()">
+        Close
+      </button>
+    </div>
+  </div>
+
+</div>

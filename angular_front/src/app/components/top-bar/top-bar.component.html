@@ -1,0 +1,42 @@
+<header class="bg-black z-10 cursor-default text-white p-4 flex justify-between items-center px-10 shadow-lg">
+  <!-- Left: Logo -->
+  <div class="text-xl font-bold">
+    <a href="#">
+      SIMPLIFY
+    </a>
+  </div>
+
+  <!-- Right: Navigation for md+ screens -->
+  <nav class="hidden md:flex space-x-6">
+    <a href="#pricing" class="hover:text-gray-400">Pricing</a>
+
+    <!-- ✅ Show Login if user is NOT logged in -->
+    <a *ngIf="!isLoggedIn" href="#" class="hover:text-gray-400" (click)="openLogin()">Login</a> 
+
+    <!-- ✅ Show Logout if user IS logged in -->
+    <a *ngIf="isLoggedIn" href="#" class="hover:text-red-600" (click)="logout()">Logout</a> 
+  </nav>
+
+  <!-- Mobile Menu Button -->
+  <button 
+    class="md:hidden px-3 py-2 border rounded text-white border-white" 
+    (click)="toggleMenu()">
+    ☰
+  </button>
+</header>
+
+<!-- Mobile Dropdown Menu -->
+<ng-container *ngIf="isMenuOpen">
+  <div class="md:hidden bg-black text-white p-4 flex flex-col space-y-2">
+    <a href="/#image" class="hover:text-gray-400">Image</a>
+    <a href="/#audio" class="hover:text-gray-400">Audio</a>
+    <a href="/#text" class="hover:text-gray-400">Text</a>
+    <a href="/#pricing" class="hover:text-gray-400">Pricing</a>
+
+    <!-- ✅ Show Login / Logout in mobile menu -->
+    <a *ngIf="!isLoggedIn" href="#" class="hover:text-gray-400" (click)="openLogin()">Login</a>
+    <a *ngIf="isLoggedIn" href="#" class="hover:text-red-600" (click)="logout()">Logout</a>
+  </div>
+</ng-container>
+
+<app-login-modal *ngIf="isLoginOpen" (loggedIn)="handleLoginSuccess()" (close)="closeLogin()"></app-login-modal>

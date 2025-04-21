@@ -1,0 +1,26 @@
+@keyframes blink {
+    0%, 100% { opacity: 1 }
+    50% { opacity: 0 }
+  }
+  
+  .animate-blink {
+    animation: blink 1s step-start infinite;
+  }
+  
+  @keyframes gradient-move {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient-move 10s ease infinite;
+  }
+  
