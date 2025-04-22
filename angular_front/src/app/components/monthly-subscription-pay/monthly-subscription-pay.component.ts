@@ -17,9 +17,12 @@ export class MonthlySubscriptionPayComponent {
 
   @Input() email!: string;  // Input property to receive email
   @Input() name!: string;   // Input property to receive name
+  @Input() _id!: string;
 
   subscriptionForm: FormGroup;
   initiated = true;
+  initiateButtonDisabled = false;
+  proceedButtonDisabled = false;
   paymentMethod = false;
   result = false;
   finalResultSuccess = false;
@@ -79,6 +82,7 @@ export class MonthlySubscriptionPayComponent {
   initiateManually() {
     if (this.subscriptionForm.valid) {
       const payload = this.subscriptionForm.value;
+      this.initiateButtonDisabled = true;
       this.onInitiateSubmit();
       console.log('✅ Initiating manually with:', payload);
       this.selectedBankName = payload.bankCode;
@@ -93,6 +97,7 @@ export class MonthlySubscriptionPayComponent {
   goBack1() {
     this.paymentMethod = false;
     this.initiated = true;
+    this.initiateButtonDisabled = false;
   }
 
   selectedMethod: 'upi' | 'enach' | 'card' | null = null;
@@ -105,29 +110,55 @@ export class MonthlySubscriptionPayComponent {
   }
 
 
-  createPaymentPayload(payment_method: any) {
-    const payload = {
-      subscription_id: this.subscriptionIdCreated,
-      payment_amount: this.amount,
-      payment_schedule_date: new Date().toISOString(),
-      payment_remarks: 'Payment process undergoing',
-      payment_type: 'AUTH',
-      payment_method: payment_method
-    };
+  async createPaymentPayload(payment_method: any) {
+    try {
 
-    console.log("Generated Payload:", payload);
+      this.proceedButtonDisabled = true;
+      const payload = {
+        subscription_id: this.subscriptionIdCreated,
+        payment_amount: this.amount,
+        payment_schedule_date: new Date().toISOString(),
+        payment_remarks: 'Payment process undergoing',
+        payment_type: 'AUTH',
+        payment_method: payment_method
+      };
 
-    axios.post('http://localhost:5000/api/subscription/pay', payload)
-      .then((response) => {
-        console.log('✅ Payment success:', response.data);
-        this.result=false;
-        this.finalResultSuccess=true;
-      })
-      .catch((error) => {
-        console.error('❌ Payment failed:', error.response?.data || error.message);
-        this.result=false;
-        this.finalResultFailed=true;
-      });
+      console.log("Generated Payload:", payload);
+
+      const response = await axios.post('http://localhost:5000/api/subscription/pay', payload);
+      console.log('✅ Payment success:', response.data.data);
+
+      this.result = false;
+      this.finalResultSuccess = true;
+
+      if (response.data.data.data.url) {
+        console.log("yes-redirecting");
+
+        const currentDate = new Date();
+        const subscriptionExpiresAt = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth() + 1,
+          currentDate.getDate()
+        );
+
+        const updatePayload = {
+          userId: this._id,
+          subscriptionId: response.data.data.subscription_id || 'sub_test_id',
+          subscriptionExpiresAt: subscriptionExpiresAt.toISOString()
+        };
+
+        await axios.post('http://localhost:5000/api/auth/updateSubscriptionStatus', updatePayload);
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error('❌ Axios error occurred:', error.response?.data || error.message);
+      } else {
+        console.error('❌ Unknown error occurred:', error);
+      }
+
+      this.result = false;
+      this.finalResultFailed = true;
+    }
   }
 
   goBack2() {

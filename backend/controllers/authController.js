@@ -150,3 +150,41 @@ export const getUserInfoByToken = async (req, res) => {
         res.status(401).json({ success: false, message: 'Invalid or expired token' });
     }
 };
+
+export const updateSubscriptionStatus = async (req, res) => {
+    const { userId, subscriptionId, subscriptionExpiresAt } = req.body;
+  
+    if (!userId || !subscriptionId || !subscriptionExpiresAt) {
+      return res.status(400).json({
+        success: false,
+        message: 'userId, subscriptionId, and subscriptionExpiresAt are required'
+      });
+    }
+  
+    try {
+      const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        {
+          subscribed: true,
+          subscriptionId,
+          subscriptionExpiresAt: new Date(subscriptionExpiresAt)
+        },
+        { new: true }
+      ).select('-password');
+  
+      if (!updatedUser) {
+        return res.status(404).json({ success: false, message: 'User not found' });
+      }
+  
+      res.status(200).json({
+        success: true,
+        message: 'Subscription updated successfully',
+        user: updatedUser
+      });
+  
+    } catch (error) {
+      console.error('Error updating subscription:', error);
+      res.status(500).json({ success: false, message: 'Server error' });
+    }
+  };
+  

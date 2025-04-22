@@ -4,6 +4,8 @@ import axios from 'axios';
 import { MonthlySubscriptionPayComponent } from '../monthly-subscription-pay/monthly-subscription-pay.component';
 import { QuarternarySubscriptionPayComponent } from '../quarternary-subscription-pay/quarternary-subscription-pay.component';
 import { YearlySubscriptionPayComponent } from '../yearly-subscription-pay/yearly-subscription-pay.component';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-home',
@@ -18,6 +20,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   email: string = '';
   isSubscribed: boolean = false;
   subscriptionExpiresAt: string | null = null;
+  _id: string = '';
 
   phrases: string[] = [
     'Speech recognition is transforming industries.',
@@ -56,7 +59,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: any,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -95,6 +99,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.email = this.userInfo.email;
         this.isSubscribed = this.userInfo.subscribed;
         this.subscriptionExpiresAt = this.userInfo.subscriptionExpiresAt;
+        this._id = this.userInfo._id;
         console.log('User info:', this.userInfo);
       }
     } catch (err) {
@@ -171,6 +176,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.month = false;
     this.quarter = false;
     this.year = false;
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate([this.router.url]);
+    });
   }
 
 }

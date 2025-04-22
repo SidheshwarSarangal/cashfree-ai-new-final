@@ -12,7 +12,7 @@ const UserSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 // Pre-save hook to set expiration date if subscribed
-UserSchema.pre('save', function (next) {
+/*UserSchema.pre('save', function (next) {
     if (this.isModified('subscribed') && this.subscribed === true) {
         // Set expiration date to 1 month from now
         this.subscriptionExpiresAt = new Date();
@@ -20,5 +20,6 @@ UserSchema.pre('save', function (next) {
     }
     next();
 });
+*/
 
 export default mongoose.model('User', UserSchema);

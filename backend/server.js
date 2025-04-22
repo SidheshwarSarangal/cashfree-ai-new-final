@@ -5,7 +5,7 @@ import connectDB from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
 import otpRoutes from './routes/otpEmailRoutes.js';
 import subscriptionRoutes  from './routes/subscriptionRoutes.js';
-import geminiRoutes from './routes/geminiRoutes.js'
+import aiRoutes from './routes/aiRoutes.js'
 //import { GoogleGenerativeAI } from "@google/generative-ai";
 
 //import OpenAI from 'openai/index.mjs';
@@ -37,7 +37,7 @@ app.use('/api/otp', otpRoutes);
 
 app.use("/api/subscription", subscriptionRoutes);
 
-app.use('/api/gemini/', geminiRoutes);
+app.use('/api/ai/', aiRoutes);
 
 // Start the server
 app.listen(port, () => {
