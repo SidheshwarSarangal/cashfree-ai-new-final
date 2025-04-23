@@ -3,6 +3,46 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import axios from 'axios';
 
+import { v2 as cloudinary } from 'cloudinary';
+
+export const uploadImage = async (req, res) => {
+    if (!req.files || !req.files.image) {
+        return res.status(400).json({ success: false, message: 'No image uploaded' });
+    }
+
+    const file = req.files.image;
+
+    try {
+        const result = await cloudinary.uploader.upload(file.tempFilePath, {
+            folder: 'temp_uploads',
+            public_id: Date.now().toString(), // this becomes the public_id
+        });
+
+        const optimizedUrl = cloudinary.url(result.public_id, {
+            fetch_format: 'auto',
+            quality: 'auto',
+        });
+
+        const croppedUrl = cloudinary.url(result.public_id, {
+            crop: 'auto',
+            gravity: 'auto',
+            width: 500,
+            height: 500,
+        });
+
+        res.json({
+            success: true,
+            originalUrl: result.secure_url,
+            optimizedUrl,
+            croppedUrl,
+            publicId: result.public_id, // ✅ return public_id here
+        });
+
+    } catch (err) {
+        console.error('Upload Error:', err);
+        res.status(500).json({ success: false, message: 'Upload failed' });
+    }
+};
 
 
 export const signup = async (req, res) => {
@@ -22,9 +62,9 @@ export const signup = async (req, res) => {
         // Check password complexity (at least 1 letter and 1 digit)
         const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).+$/;
         if (!passwordRegex.test(password)) {
-            return res.status(400).json({ 
-                success: false, 
-                message: 'Password must contain at least one letter and one digit' 
+            return res.status(400).json({
+                success: false,
+                message: 'Password must contain at least one letter and one digit'
             });
         }
 
@@ -75,20 +115,20 @@ export const signin = async (req, res) => {
 
         // Generate JWT token
         const token = jwt.sign(
-            { 
-                id: user._id, 
-                email: user.email, 
-                subscribed: user.subscribed 
+            {
+                id: user._id,
+                email: user.email,
+                subscribed: user.subscribed
             },
-            process.env.JWT_SECRET, 
+            process.env.JWT_SECRET,
             { expiresIn: '7d' }
         );
         console.log("xxxxxxxxxxxxxxxxxxxxxxx")
 
-        res.status(200).json({ 
-            success: true, 
-            message: 'Signin successful', 
-            token 
+        res.status(200).json({
+            success: true,
+            message: 'Signin successful',
+            token
         });
     } catch (error) {
         res.status(500).json({ success: false, message: 'Server error' });
@@ -105,31 +145,7 @@ export const getLoggedInUser = async (req, res) => {
     }
 };
 
-/*
-export const getUserInfoByToken = async (req, res) => {
-    const { token } = req.body;
 
-    if (!token) {
-        return res.status(400).json({ success: false, message: 'Token is required' });
-    }
-
-    try {
-        // Verify token
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-        // Find user by ID
-        const user = await User.findById(decoded.id).select('-password');
-        if (!user) {
-            return res.status(404).json({ success: false, message: 'User not found' });
-        }
-
-        // Send user info
-        res.status(200).json({ success: true, user });
-    } catch (error) {
-        console.error('Error verifying token:', error);
-        res.status(401).json({ success: false, message: 'Invalid or expired token' });
-    }
-};*/
 export const getUserInfoByToken = async (req, res) => {
     const token = req.headers.authorization?.split(' ')[1];
 
@@ -153,38 +169,37 @@ export const getUserInfoByToken = async (req, res) => {
 
 export const updateSubscriptionStatus = async (req, res) => {
     const { userId, subscriptionId, subscriptionExpiresAt } = req.body;
-  
+
     if (!userId || !subscriptionId || !subscriptionExpiresAt) {
-      return res.status(400).json({
-        success: false,
-        message: 'userId, subscriptionId, and subscriptionExpiresAt are required'
-      });
+        return res.status(400).json({
+            success: false,
+            message: 'userId, subscriptionId, and subscriptionExpiresAt are required'
+        });
     }
-  
+
     try {
-      const updatedUser = await User.findByIdAndUpdate(
-        userId,
-        {
-          subscribed: true,
-          subscriptionId,
-          subscriptionExpiresAt: new Date(subscriptionExpiresAt)
-        },
-        { new: true }
-      ).select('-password');
-  
-      if (!updatedUser) {
-        return res.status(404).json({ success: false, message: 'User not found' });
-      }
-  
-      res.status(200).json({
-        success: true,
-        message: 'Subscription updated successfully',
-        user: updatedUser
-      });
-  
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            {
+                subscribed: true,
+                subscriptionId,
+                subscriptionExpiresAt: new Date(subscriptionExpiresAt)
+            },
+            { new: true }
+        ).select('-password');
+
+        if (!updatedUser) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Subscription updated successfully',
+            user: updatedUser
+        });
+
     } catch (error) {
-      console.error('Error updating subscription:', error);
-      res.status(500).json({ success: false, message: 'Server error' });
+        console.error('Error updating subscription:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
     }
-  };
-  
+};

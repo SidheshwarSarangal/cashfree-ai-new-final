@@ -128,3 +128,40 @@ export const textToSpeechController = async (req, res) => {
   }
 };
 
+
+export const analyzeImage = async (req, res) => {
+  const { imageUrl } = req.body;
+
+  if (!imageUrl) {
+    return res.status(400).json({ success: false, message: 'Image URL is required' });
+  }
+
+  try {
+    const chatCompletion = await groq.chat.completions.create({
+      messages: [
+        {
+          role: 'user',
+          content: [
+            { type: 'text', text: "What's in this image?" },
+            { type: 'image_url', image_url: { url: imageUrl } }
+          ]
+        }
+      ],
+      model: 'meta-llama/llama-4-scout-17b-16e-instruct',
+      temperature: 1,
+      max_completion_tokens: 1024,
+      top_p: 1,
+      stream: false
+    });
+
+    const result = chatCompletion.choices[0].message.content;
+
+    res.json({
+      success: true,
+      result,
+    });
+  } catch (error) {
+    console.error('Error analyzing image:', error);
+    res.status(500).json({ success: false, message: 'Failed to analyze image' });
+  }
+};

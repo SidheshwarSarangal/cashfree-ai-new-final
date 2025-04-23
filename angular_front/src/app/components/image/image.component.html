@@ -16,7 +16,7 @@
   
       <div *ngIf="imagePreviewUrl" class="mt-6 text-center">
         <p class="text-lg mb-4 text-gray-700 dark:text-white">Temporary Image URL (valid 5 mins):</p>
-        <a [href]="imagePreviewUrl" target="_blank" class="text-blue-600 underline">{{ imagePreviewUrl }}</a>
+        <a [href]="imagePreviewUrlScreen" target="_blank" class="text-blue-600 underline">{{ imagePreviewUrl }}</a>
         <div class="mt-4">
           <img [src]="imagePreviewUrl" alt="Uploaded Image Preview" class="max-w-full max-h-96 mx-auto rounded-md shadow" />
         </div>
