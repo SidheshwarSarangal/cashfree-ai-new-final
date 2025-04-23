@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { translateController, textToSpeechController, audioToTextController } from "../controllers/aiControllers.js";
+import { translateController, textToSpeechController, upload, audioToTextController } from "../controllers/aiControllers.js";
 
 const router = Router();
 
 // Define chat route
 router.post('/text-text', translateController);
 router.post('/text-speech', textToSpeechController);
-router.post('/audio-text', audioToTextController);
+router.post('/audio-translate', upload.single('file'), audioToTextController);
 
 export default router;

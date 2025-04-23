@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common'; // ✅ Import CommonModule
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ChangeDetectorRef } from '@angular/core';
 import axios from 'axios';
 
 @Component({
   selector: 'app-audio',
   standalone: true,
-  imports: [CommonModule, FormsModule], // ✅ Add CommonModule here
+  imports: [CommonModule, FormsModule],
   templateUrl: './audio.component.html'
 })
 export class AudioComponent implements OnInit {
@@ -15,14 +16,15 @@ export class AudioComponent implements OnInit {
   userName: string = '';
   email: string = '';
   subscriptionExpiresAt: string = '';
+  translatedText: string = '';
   audio: HTMLAudioElement | null = null;
 
+  constructor(private cdr: ChangeDetectorRef) {}
 
-  // 👇 Add these lines
-  inputLang: string = 'English';
-  outputLang: string = 'Hindi';
-  inputText: string = '';
-  translatedText = '';
+
+  recording: boolean = false;
+  mediaRecorder: MediaRecorder | null = null;
+  audioChunks: Blob[] = [];
 
   async ngOnInit(): Promise<void> {
     await this.fetchUserInfo();
@@ -30,50 +32,82 @@ export class AudioComponent implements OnInit {
 
   async fetchUserInfo(): Promise<void> {
     const token = localStorage.getItem('token');
-    if (!token) {
-      console.log('No token found');
-      return;
-    }
-
+    if (!token) return;
     try {
-      const response = await axios.get('http://localhost:5000/api/auth/user-info', {
+      const res = await axios.get('http://localhost:5000/api/auth/user-info', {
         headers: { Authorization: `Bearer ${token}` }
       });
-
-      if (response.data.success) {
-        this.userInfo = response.data.user;
+      if (res.data.success) {
+        this.userInfo = res.data.user;
         this.userName = this.userInfo.name;
         this.email = this.userInfo.email;
         this.isSubscribed = this.userInfo.subscribed;
         this.subscriptionExpiresAt = this.userInfo.subscriptionExpiresAt;
-        console.log('User info:', this.userInfo);
       }
     } catch (err) {
       console.error('Error fetching user info:', err);
     }
   }
 
-  async handleSubmit() {
+  async startRecording() {
+    this.translatedText = '';
+    this.audioChunks = [];
     try {
-      const response = await axios.post('http://localhost:5000/api/ai/text-text', {
-        inputLang: this.inputLang,
-        outputLang: this.outputLang,
-        inputText: this.inputText,
-      });
-      console.log(response);
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      this.mediaRecorder = new MediaRecorder(stream);
+      this.mediaRecorder.ondataavailable = event => {
+        this.audioChunks.push(event.data);
+      };
+      this.mediaRecorder.onstop = () => this.uploadAudio();
+      this.mediaRecorder.start();
+      this.recording = true;
+      //alert('Recording started!');
+    } catch (err) {
+      alert('Microphone access denied or error occurred.');
+      console.error(err);
+    }
+  }
 
-      this.translatedText = response.data;
-    } catch (error) {
-      console.error('Translation failed:', error);
+  stopRecording() {
+    if (this.mediaRecorder && this.recording) {
+      this.mediaRecorder.stop();
+      this.recording = false;
+      alert('Recording stopped!');
+    }
+    else{
+      alert('No recording in progress.');
+    }
+  }
+
+  toggleRecording() {
+    if (this.recording) {
+      this.stopRecording();  // Stop recording
+    } else {
+      this.startRecording(); // Start recording
+    }
+  }
+  
+
+  async uploadAudio() {
+    const audioBlob = new Blob(this.audioChunks, { type: 'audio/webm' });
+    const formData = new FormData();
+    formData.append('file', audioBlob, 'voice.webm');
+
+    try {
+      const res = await axios.post('http://localhost:5000/api/ai/audio-translate', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      this.translatedText = res.data.translatedText;
+      this.cdr.detectChanges();  // <-- Add this line
+      console.log(this.translatedText);
+    } catch (err) {
+      console.error('Translation failed:', err);
       alert('Translation failed.');
     }
   }
 
   async playAudio() {
-    if (!this.inputText.trim()) {
-      alert('Please enter text to play audio.');
-      return;
-    }
+   
 
     try {
       const response = await axios.post(

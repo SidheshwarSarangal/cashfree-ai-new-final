@@ -1,12 +1,72 @@
 import Groq from 'groq-sdk';
-import dotenv from 'dotenv';
-import axios from "axios";
-import fs from "fs";
-import path from "path";
-import FormData from "form-data";
 
+import multer from 'multer';
+import fs from 'fs';
+import path from 'path';
+import axios from 'axios';
+import FormData from 'form-data';
+import dotenv from 'dotenv';
 
 dotenv.config();
+
+// === MULTER SETUP ===
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const dir = './uploads';
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir);
+    cb(null, dir);
+  },
+  filename: function (req, file, cb) {
+    cb(null, `audio-${Date.now()}${path.extname(file.originalname)}`);
+  },
+});
+export const upload = multer({ storage });
+
+// === AUDIO TRANSLATION CONTROLLER ===
+export const audioToTextController = async (req, res) => {
+  try {
+    const audioPath = req.file?.path;
+
+    if (!audioPath) {
+      return res.status(400).json({ success: false, message: 'No file uploaded' });
+    }
+
+    // Prepare form data for sending the audio file to the translation API
+    const formData = new FormData();
+    formData.append('file', fs.createReadStream(audioPath));
+    formData.append('model', 'whisper-large-v3');
+    formData.append('response_format', 'json');
+
+    // Sending the request to the Groq API
+    const response = await axios.post(
+      'https://api.groq.com/openai/v1/audio/translations',
+      formData,
+      {
+        headers: {
+          ...formData.getHeaders(),
+          Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+        },
+      }
+    );
+
+    // Delete the file after use
+    fs.unlinkSync(audioPath);
+
+    // Send back the translated text
+    return res.json({
+      success: true,
+      translatedText: response.data.text,
+    });
+
+  } catch (error) {
+    console.error('Translation error:', error.response?.data || error.message);
+    return res.status(500).json({
+      success: false,
+      message: 'Translation failed',
+    });
+  }
+};
+
 
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
@@ -68,37 +128,3 @@ export const textToSpeechController = async (req, res) => {
   }
 };
 
-
-
-export const audioToTextController = async (req, res) => {
-  try {
-    const audioPath = req.file.path; // assuming multer handles file upload
-
-    const formData = new FormData();
-    formData.append("file", fs.createReadStream(audioPath));
-    formData.append("model", "whisper-large-v3");
-    formData.append("response_format", "json");
-    formData.append("task", "translate"); // ensures English output
-
-    const response = await axios.post("https://api.groq.com/openai/v1/audio/translations", formData, {
-      headers: {
-        ...formData.getHeaders(),
-        Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
-      },
-    });
-
-    fs.unlinkSync(audioPath); // delete temp file
-
-    return res.json({
-      success: true,
-      translatedText: response.data.text,
-    });
-
-  } catch (err) {
-    console.error("Audio to Text Error:", err.response?.data || err.message);
-    return res.status(500).json({
-      success: false,
-      message: "Failed to transcribe audio.",
-    });
-  }
-};
