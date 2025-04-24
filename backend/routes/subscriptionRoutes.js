@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createSubscription, raiseCharge, getSubscriptionPaymentDetails, simulatePaymentResult, simulatePayment, createPlan, getSubscription, manageSubscription, getEligiblePaymentMethods } from "../controllers/subscriptionController.js";
+import { createSubscription, raiseCharge, processRefund, getSubscriptionPaymentDetails, simulatePaymentResult, simulatePayment, createPlan, getSubscription, manageSubscription, getEligiblePaymentMethods } from "../controllers/subscriptionController.js";
 import { createSubscriptionPlan} from "../controllers/subscriptionController.js"
 const router = Router();
 
@@ -14,7 +14,7 @@ router.post("/pay", raiseCharge);
 router.post('/simulate-payment', simulatePayment);
 router.get('/simulate/:simulation_id', simulatePaymentResult); 
 router.get('/payment/:subscriptionId/:paymentId', getSubscriptionPaymentDetails);
-
+router.post('/refund', processRefund);
 
 //router.post('/subscription-plans', createSubscriptionPlan);
 

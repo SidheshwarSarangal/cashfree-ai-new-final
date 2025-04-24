@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { translateController, textToSpeechController, upload, audioToTextController, analyzeImage } from "../controllers/aiControllers.js";
+import { translateController, textToSpeechController, upload, audioToTextController,  analyzeImage } from "../controllers/aiControllers.js";
 
 const router = Router();
 

@@ -18,6 +18,7 @@ export class AudioComponent implements OnInit {
   subscriptionExpiresAt: string = '';
   translatedText: string = '';
   audio: HTMLAudioElement | null = null;
+  loggedIn: boolean = false;
 
   constructor(private cdr: ChangeDetectorRef) {}
 
@@ -33,6 +34,7 @@ export class AudioComponent implements OnInit {
   async fetchUserInfo(): Promise<void> {
     const token = localStorage.getItem('token');
     if (!token) return;
+    this.loggedIn=true;
     try {
       const res = await axios.get('http://localhost:5000/api/auth/user-info', {
         headers: { Authorization: `Bearer ${token}` }

@@ -97,8 +97,13 @@
 
     <!-- Show if Not Subscribed -->
     <div
-        *ngIf="!isSubscribed"
+        *ngIf="!isSubscribed && loggedIn"
         class="m-10 p-6 text-center text-xl font-semibold text-red-600 border-red-400 border-2 border-dashed rounded-lg">
         Not Subscribed ❌
+    </div>
+    <div
+        *ngIf="!loggedIn"
+        class="m-10 p-6 text-center text-xl font-semibold text-red-600 border-red-400 border-2 border-dashed rounded-lg">
+        Please Login First
     </div>
 </div>

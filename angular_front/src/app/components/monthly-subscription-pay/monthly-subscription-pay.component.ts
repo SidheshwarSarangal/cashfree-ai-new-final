@@ -51,7 +51,7 @@ export class MonthlySubscriptionPayComponent {
     this.subscriptionForm = this.fb.group({
       phone: ['', [Validators.required, Validators.pattern(/^[6-9]\d{9}$/)]],
       accountHolder: ['', [Validators.required]],
-      accountNumber: ['', [Validators.required, Validators.pattern(/^\d{8,}$/)]],
+      accountNumber: ['', [Validators.required, Validators.pattern(/^\d{9,}$/)]],
       ifsc: ['', [
         Validators.required,
         Validators.pattern(/^[A-Za-z]{4}0[A-Za-z0-9]{6}$/) // IFSC pattern
@@ -144,6 +144,10 @@ export class MonthlySubscriptionPayComponent {
         const updatePayload = {
           userId: this._id,
           subscriptionId: response.data.data.subscription_id || 'sub_test_id',
+          paymentId: response.data.data.payment_id,
+          cfPaymentId: response.data.data.cf_payment_id,
+          subscriptionType: "200",
+          subscribtionStartsAt: currentDate.toISOString(),
           subscriptionExpiresAt: subscriptionExpiresAt.toISOString()
         };
 

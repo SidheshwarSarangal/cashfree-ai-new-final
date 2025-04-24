@@ -12,19 +12,19 @@
                 
                 <!-- OTP Section -->
                 <div *ngIf="!otpSent && !otpVerified">
-                    <button type="button" class="bg-blue-500 text-white p-2 rounded w-full" (click)="sendOtp()">Send OTP</button>
+                    <button type="button" class="bg-blue-500 hover:bg-blue-600 hover:cursor-pointer text-white p-2 rounded w-full" (click)="sendOtp()">Send OTP</button>
                 </div>
 
                 <div *ngIf="otpSent">
                     <input type="text" placeholder="Enter OTP" [(ngModel)]="otp" name="otp" class="border p-2 rounded">
-                    <button type="button" class="bg-green-500 text-white p-2 mt-3 rounded w-full" (click)="verifyOtp()">Verify OTP</button>
+                    <button type="button" class="bg-green-500 hover:bg-green-600 hover:cursor-pointer text-white p-2 mt-3 rounded w-full" (click)="verifyOtp()">Verify OTP</button>
                 </div>
 
                 <!-- Password Fields (Only shown after OTP is verified) -->
                 <div *ngIf="otpVerified">
                     <input type="password" placeholder="Password" [(ngModel)]="password" name="password" class="border p-2 rounded">
                     <input type="password" placeholder="Confirm Password" [(ngModel)]="confirmPassword" name="confirmPassword" class="border p-2 mt-3 rounded">
-                    <button type="submit" (click)="signup()" class="bg-black text-white p-2 mt-3 rounded w-full">Sign Up</button>
+                    <button type="submit" (click)="signup()" class="bg-black cursor-pointer hover:bg-gray-800 text-white p-2 mt-3 rounded w-full">Sign Up</button>
                 </div>
             </form>
         </div>
@@ -35,12 +35,12 @@
             <form class="flex flex-col space-y-4">
                 <input type="text" placeholder="Email" [(ngModel)]="email" name="email" class="border p-2 rounded">
                 <input type="password" placeholder="Password" [(ngModel)]="password" name="password" class="border p-2 rounded">
-                <button type="submit" (click)="login()" class="bg-black text-white p-2 rounded w-full">Login</button>
+                <button type="submit" (click)="login()" class="bg-black  hover:bg-gray-800 text-white cursor-pointer p-2 rounded w-full">Login</button>
             </form>
         </div>
 
         <!-- Toggle Login/Signup (Bottom Left) -->
-        <p class="text-blue-500 text-left mt-4 cursor-pointer" (click)="toggleForm()">
+        <p class="text-blue-500 text-left mt-4 cursor-default" (click)="toggleForm()">
             {{ isSignup ? 'Login' : 'Create Account' }}
         </p>
     </div>

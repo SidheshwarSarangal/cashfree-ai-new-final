@@ -8,6 +8,10 @@ const UserSchema = new mongoose.Schema({
     password: { type: String, required: true },
     subscribed: { type: Boolean, default: false },
     subscriptionId: { type: String, default: null },
+    paymentId: { type: String, default: null },
+    cfPaymentId: { type: String, default: null },
+    subscriptionType: { type: String, defailt: null },
+    subscriptionStartsAt: { type: Date, default: null },
     subscriptionExpiresAt: { type: Date, default: null }
 }, { timestamps: true });
 

@@ -16,6 +16,7 @@ export class TextComponent implements OnInit {
   email: string = '';
   subscriptionExpiresAt: string = '';
   audio: HTMLAudioElement | null = null;
+  loggedIn: boolean = false;
 
 
   // 👇 Add these lines
@@ -34,6 +35,7 @@ export class TextComponent implements OnInit {
       console.log('No token found');
       return;
     }
+    this.loggedIn=true;
 
     try {
       const response = await axios.get('http://localhost:5000/api/auth/user-info', {

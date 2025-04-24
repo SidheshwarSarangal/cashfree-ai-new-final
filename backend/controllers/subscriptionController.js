@@ -7,6 +7,61 @@ dotenv.config();
 
 //const CASHFREE_API_URL = "https://sandbox.cashfree.com/pg/api/v2/subscriptions/seamless/subscription";
 
+
+// Cashfree refund endpoint URL
+const refundUrl = 'https://sandbox.cashfree.com/pg/subscriptions/{subscription_id}/refunds';
+
+// Refund handler function
+export const processRefund = async (req, res) => {
+  const { subscriptionId, paymentId, refundId, refundAmount, refundNote, refundSpeed, cfPaymentId } = req.body;
+
+  const options = {
+    method: 'POST',
+    headers: {
+      'x-api-version': '1.0', // Replace with the correct version
+      'x-client-id': '<api-key>', // Replace with actual API key
+      'x-client-secret': '<api-key>', // Replace with actual API key
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      subscription_id: subscriptionId,
+      payment_id: paymentId,
+      refund_id: refundId,
+      refund_amount: refundAmount,
+      refund_note: refundNote,
+      refund_speed: refundSpeed,
+      cf_payment_id: cfPaymentId
+    })
+  };
+
+  try {
+    const response = await fetch(refundUrl.replace("{subscription_id}", subscriptionId), options);
+    const data = await response.json();
+
+    if (response.ok) {
+      return res.status(200).json({
+        success: true,
+        message: 'Refund processed successfully',
+        data: data
+      });
+    } else {
+      return res.status(response.status).json({
+        success: false,
+        message: 'Refund processing failed',
+        error: data
+      });
+    }
+  } catch (err) {
+    console.error('Error processing refund:', err);
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error while processing refund',
+      error: err.message
+    });
+  }
+};
+
+
 export const createSubscription = async (req, res) => {
     try {
         const {

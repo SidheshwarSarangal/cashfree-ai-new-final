@@ -186,8 +186,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.month = false;
     this.quarter = false;
     this.year = false;
-    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-      this.router.navigate([this.router.url]);
+    this.ngZone.runOutsideAngular(() => {
+      setTimeout(() => {
+        location.reload();
+      }, 100); // slight delay to allow UI updates
     });
   }
 
