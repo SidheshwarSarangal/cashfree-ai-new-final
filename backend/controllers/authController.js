@@ -189,7 +189,7 @@ export const getUserInfoByToken = async (req, res) => {
 };
 
 export const updateSubscriptionStatus = async (req, res) => {
-    const { userId, subscriptionId, paymentId, cfPaymentId, subscriptionType, subscribtionStartsAt, subscriptionExpiresAt } = req.body;
+    const { userId, subscriptionId, paymentId, cfPaymentId, subscriptionType, subscriptionStartsAt, subscriptionExpiresAt } = req.body;
 
     if (!userId || !subscriptionId || !subscriptionExpiresAt) {
         return res.status(400).json({
@@ -207,7 +207,7 @@ export const updateSubscriptionStatus = async (req, res) => {
                 paymentId,
                 cfPaymentId,
                 subscriptionType,
-                subscribtionStartsAt: new Date(subscribtionStartsAt),
+                subscriptionStartsAt: new Date(subscriptionStartsAt),
                 subscriptionExpiresAt: new Date(subscriptionExpiresAt)
             },
             { new: true }
@@ -226,5 +226,27 @@ export const updateSubscriptionStatus = async (req, res) => {
     } catch (error) {
         console.error('Error updating subscription:', error);
         res.status(500).json({ success: false, message: 'Server error' });
+    }
+};
+
+
+export const unsubscribeUserById = async (req, res) => {
+    try {
+        const userId = req.params.id;
+
+        // Find the user by ID and update the 'subscribed' field
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        user.subscribed = false;  // Mark the user as unsubscribed
+        await user.save();
+
+        res.status(200).json({ success: true, message: 'User unsubscribed successfully' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: 'Error unsubscribing user' });
     }
 };

@@ -126,7 +126,7 @@ export class MonthlySubscriptionPayComponent {
       console.log("Generated Payload:", payload);
 
       const response = await axios.post('http://localhost:5000/api/subscription/pay', payload);
-      console.log('✅ Payment success:', response.data.data);
+      console.log('✅ Payment success:', response.data.data.data.url);
 
       this.result = false;
       this.finalResultSuccess = true;
@@ -147,7 +147,7 @@ export class MonthlySubscriptionPayComponent {
           paymentId: response.data.data.payment_id,
           cfPaymentId: response.data.data.cf_payment_id,
           subscriptionType: "200",
-          subscribtionStartsAt: currentDate.toISOString(),
+          subscriptionStartsAt: currentDate.toISOString(),
           subscriptionExpiresAt: subscriptionExpiresAt.toISOString()
         };
 

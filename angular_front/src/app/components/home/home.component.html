@@ -43,9 +43,22 @@
       <!-- Subscribe Button -->
 
       <!-- Subscribed Banner -->
-      <div *ngIf="isSubscribed"
-        class="bg-green-100 text-green-800 font-semibold text-center py-3 px-6 rounded mb-12 w-fit mx-auto shadow">
-        🎉 You are already subscribed!
+      <div *ngIf="isSubscribed" id="pricing">
+
+        <div
+          class="bg-green-100 text-green-800 font-semibold text-center py-3 mb-6 px-6 rounded  w-fit mx-auto shadow">
+          >
+          🎉 You are already subscribed!
+
+        </div>
+
+        <div class="text-center">
+          <button
+            (click)="refund()"
+            class="bg-purple-600 hover:bg-red-400 text-white text-xl py-2 px-4 rounded transition-all ">
+            Unsubscribe
+          </button>
+        </div>
       </div>
 
       <!-- Pricing Boxes -->
@@ -109,32 +122,43 @@
     *ngIf="showPopup"
     class="fixed inset-0  flex items-center justify-center z-50"
     style="background: rgba(0, 0, 0, 0.4);">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-80 text-center">
-      <ng-container *ngIf="month">
-        <app-monthly-subscription-pay
-          [email]="email"
-          [name]="userName"
-          [_id]="_id">
-        </app-monthly-subscription-pay>
-      </ng-container>
-      <p *ngIf="quarter">
-        <app-quarternary-subscription-pay
-          [email]="email"
-          [name]="userName">
-        </app-quarternary-subscription-pay>
-      </p>
-      <p *ngIf="year">
-        <app-yearly-subscription-pay
-          [email]="email"
-          [name]="userName">
-        </app-yearly-subscription-pay>
-      </p>
-
-      <button
-        class="mt-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-        (click)="closePopup()">
-        Close
-      </button>
+    <div *ngIf="isSubscribed">
+      <div class="bg-white p-6 rounded-lg shadow-lg w-80 text-center">
+        <app-refund></app-refund>
+        <button
+          class="mt-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          (click)="closePopup()">
+          Close
+        </button>
+      </div>
+    </div>
+    <div *ngIf="!isSubscribed">
+      <div class="bg-white p-6 rounded-lg shadow-lg w-80 text-center">
+        <ng-container *ngIf="month">
+          <app-monthly-subscription-pay
+            [email]="email"
+            [name]="userName"
+            [_id]="_id">
+          </app-monthly-subscription-pay>
+        </ng-container>
+        <p *ngIf="quarter">
+          <app-quarternary-subscription-pay
+            [email]="email"
+            [name]="userName">
+          </app-quarternary-subscription-pay>
+        </p>
+        <p *ngIf="year">
+          <app-yearly-subscription-pay
+            [email]="email"
+            [name]="userName">
+          </app-yearly-subscription-pay>
+        </p>
+        <button
+          class="mt-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          (click)="closePopup()">
+          Close
+        </button>
+      </div>
     </div>
   </div>
 

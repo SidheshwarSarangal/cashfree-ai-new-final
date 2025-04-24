@@ -6,6 +6,7 @@ import { QuarternarySubscriptionPayComponent } from '../quarternary-subscription
 import { YearlySubscriptionPayComponent } from '../yearly-subscription-pay/yearly-subscription-pay.component';
 import { Router } from '@angular/router';
 import { Output, EventEmitter } from '@angular/core';
+import { RefundComponent } from '../refund/refund.component';
 
 
 
@@ -14,7 +15,7 @@ import { Output, EventEmitter } from '@angular/core';
   standalone: true,
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
-  imports: [CommonModule, MonthlySubscriptionPayComponent, QuarternarySubscriptionPayComponent, YearlySubscriptionPayComponent]
+  imports: [CommonModule, MonthlySubscriptionPayComponent, QuarternarySubscriptionPayComponent, YearlySubscriptionPayComponent, RefundComponent]
 })
 export class HomeComponent implements OnInit, OnDestroy {
   // home.component.ts
@@ -179,6 +180,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
 
     this.showPopup = true;
+  }
+
+  refund(){
+    this.showPopup=true;
   }
 
   closePopup() {
