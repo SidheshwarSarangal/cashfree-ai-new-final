@@ -20,6 +20,9 @@ export class ImageComponent implements OnInit {
   translatedText: string = '';
   imagePreviewUrl: string | null = null;
   imagePreviewUrlScreen: string | null = null;
+  analyseResult: string | null = null;
+  audio: HTMLAudioElement | null = null;
+
 
   constructor(private cdr: ChangeDetectorRef) {
     // Firebase init (runs only once)
@@ -86,9 +89,24 @@ export class ImageComponent implements OnInit {
         });
 
         if (analysisRes.data.success) {
+          this.analyseResult = analysisRes.data.result;
           console.log('Groq Analysis Result:', analysisRes.data.result);
         } else {
           console.error('Analysis failed:', analysisRes.data.message);
+        }
+
+        try {
+          const deleteRes = await axios.post('http://localhost:5000/api/auth/delete-image', {
+            public_id: response.data.publicId,
+          });
+
+          if (deleteRes.data.success) {
+            console.log('Image deletion successful:', deleteRes.data.message);
+          } else {
+            console.warn('Image deletion failed:', deleteRes.data.message);
+          }
+        } catch (deleteErr) {
+          console.error('Error deleting image:', deleteErr);
         }
 
       } else {
@@ -99,5 +117,4 @@ export class ImageComponent implements OnInit {
       alert('Upload or analysis failed');
     }
   }
-
 }

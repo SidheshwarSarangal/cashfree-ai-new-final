@@ -5,6 +5,8 @@ import { MonthlySubscriptionPayComponent } from '../monthly-subscription-pay/mon
 import { QuarternarySubscriptionPayComponent } from '../quarternary-subscription-pay/quarternary-subscription-pay.component';
 import { YearlySubscriptionPayComponent } from '../yearly-subscription-pay/yearly-subscription-pay.component';
 import { Router } from '@angular/router';
+import { Output, EventEmitter } from '@angular/core';
+
 
 
 @Component({
@@ -15,6 +17,10 @@ import { Router } from '@angular/router';
   imports: [CommonModule, MonthlySubscriptionPayComponent, QuarternarySubscriptionPayComponent, YearlySubscriptionPayComponent]
 })
 export class HomeComponent implements OnInit, OnDestroy {
+  // home.component.ts
+  @Output() subscribedStatus = new EventEmitter<boolean>();  // 👈 Emit subscription status
+
+
   userInfo: any = null;
   userName: string = '';
   email: string = '';
@@ -23,11 +29,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   _id: string = '';
 
   phrases: string[] = [
-    'Speech recognition is transforming industries.',
-    'Learn how AI can help you automate tasks!!!!',
-    'AI is the future of technology.',
-    'Speech-to-text is revolutionizing accessibility.',
-    'Embrace the power of AI today!!!!'
+    'Speech recognition',
+    'Learn how AI can help',
+    'AI is the future',
+    'Speech-to-text',
+    'Embrace the power of AI'
   ];
   phraseIndex: number = 0;
   charIndex: number = 0;
@@ -100,12 +106,16 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.isSubscribed = this.userInfo.subscribed;
         this.subscriptionExpiresAt = this.userInfo.subscriptionExpiresAt;
         this._id = this.userInfo._id;
+
+        // home.component.ts
+        this.subscribedStatus.emit(this.isSubscribed);  // 👈 Emit status when user info is fetched
         console.log('User info:', this.userInfo);
       }
     } catch (err) {
       console.error('Error fetching user info:', err);
     }
   }
+
   startTypingEffect(): void {
     const typeAndDelete = () => {
       if (!this.isDeleting) {

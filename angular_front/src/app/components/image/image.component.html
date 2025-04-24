@@ -1,32 +1,54 @@
-<div class="min-h-screen mt-12 md:p-6 md:pl-44 px-2">
-    <!-- Subscribed content -->
-    <div *ngIf="isSubscribed"
-         class="m-4 mb-10 p-6 bg-white dark:bg-[#343541] max-w-3xl xl:mx-auto border border-gray-300 dark:border-gray-600 rounded-xl shadow-md">
-  
-      <div class="text-4xl font-semibold text-gray-800 dark:text-white text-center mb-6">
-        🖼️ Upload an Image for Temporary URL (5 min)
-      </div>
-  
-      <div class="text-center">
-        <input type="file"
-               accept="image/*"
-               (change)="onImageSelected($event)"
-               class="block w-full text-lg text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" />
-      </div>
-  
-      <div *ngIf="imagePreviewUrl" class="mt-6 text-center">
-        <p class="text-lg mb-4 text-gray-700 dark:text-white">Temporary Image URL (valid 5 mins):</p>
-        <a [href]="imagePreviewUrlScreen" target="_blank" class="text-blue-600 underline">{{ imagePreviewUrl }}</a>
-        <div class="mt-4">
-          <img [src]="imagePreviewUrl" alt="Uploaded Image Preview" class="max-w-full max-h-96 mx-auto rounded-md shadow" />
-        </div>
-      </div>
+<div
+  class="cursor-default min-h-screen  p-0 px-4 mt-12 md:p-6 md:pl-44 pace-y-12 md:px-32  ">
+  <!-- Subscribed content -->
+  <div *ngIf="isSubscribed"
+    class="m-4 mb-10 p-6 bg-white dark:bg-[#343541] max-w-3xl xl:mx-auto border border-gray-300 dark:border-gray-600 rounded-xl shadow-md">
+
+    <div
+      class="text-4xl font-semibold text-gray-800 dark:text-white text-center mb-6">
+      Upload the image to be analysed!!!!
     </div>
-  
-    <!-- Not Subscribed -->
-    <div *ngIf="!isSubscribed"
-         class="m-10 p-6 text-center text-xl font-semibold text-red-600 border-red-400 border-2 border-dashed rounded-lg">
-      Not Subscribed ❌
+
+    <div class="text-center">
+      <label
+        for="imageUpload"
+        class="inline-block px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow cursor-pointer">
+        Upload Image
+      </label>
+      <input
+        id="imageUpload"
+        type="file"
+        accept="image/*"
+        (change)="onImageSelected($event)"
+        class="hidden">
+    </div>
+
+    <div *ngIf="imagePreviewUrl" class="mt-6 text-center">
+      <div class="mt-4">
+        <img [src]="imagePreviewUrl" alt="Uploaded Image Preview"
+          class="max-w-full max-h-96 mx-auto rounded-md shadow" />
+      </div>
     </div>
   </div>
-  
+
+  <div *ngIf="analyseResult && analyseResult!==''"
+    class="mt-4 p-4 max-w-4xl mb-6 mx-auto bg-gray-100 dark:bg-gray-700 rounded-md">
+    <div class="flex justify-end mb-2">
+     
+    </div>
+    <h3
+      class="text-3xl font-semibold text-gray-800 dark:text-white">Result
+      Analysis
+      Text:</h3>
+    <p
+      class="text-gray-700 text-2xl whitespace-pre-wrap p-2 dark:text-gray-300">{{
+      analyseResult
+      }}</p>
+  </div>
+
+  <!-- Not Subscribed -->
+  <div *ngIf="!isSubscribed"
+    class="m-10 p-6 text-center text-xl font-semibold text-red-600 border-red-400 border-2 border-dashed rounded-lg">
+    Not Subscribed ❌
+  </div>
+</div>

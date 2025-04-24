@@ -107,8 +107,6 @@ export class AudioComponent implements OnInit {
   }
 
   async playAudio() {
-   
-
     try {
       const response = await axios.post(
         'http://localhost:5000/api/ai/text-speech',

@@ -1,6 +1,8 @@
 import { Component, OnInit, PLATFORM_ID, Inject } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { LoginModalComponent } from '../login/login.component';
+import { Input } from '@angular/core';
+
 
 @Component({
   selector: 'app-top-bar',
@@ -9,18 +11,21 @@ import { LoginModalComponent } from '../login/login.component';
   imports: [CommonModule, LoginModalComponent],
   styleUrls: ['./top-bar.component.css']
 })
-export class TopBarComponent implements OnInit { 
+export class TopBarComponent implements OnInit {
   isMenuOpen = false;
+  userInfo: any = null;
   isLoginOpen = false;
-  isLoggedIn = false;  // ✅ Track login state
+  isLoggedIn = false;
+  // top-bar.component.ts
+  @Input() isSubscribed!: boolean;  // 👈 Receive the status here
 
-  constructor(@Inject(PLATFORM_ID) private platformId: object) {}
+  constructor(@Inject(PLATFORM_ID) private platformId: object) { }
 
   ngOnInit() {
-    // ✅ Check token only in browser (Avoid SSR errors)
     if (isPlatformBrowser(this.platformId)) {
       this.isLoggedIn = !!localStorage.getItem('token');
     }
+    console.log("isSubscribedxxxxxxxxxxx", this.isSubscribed);
   }
 
   toggleMenu() {
@@ -33,8 +38,6 @@ export class TopBarComponent implements OnInit {
 
   closeLogin() {
     this.isLoginOpen = false;
-
-    // ✅ Recheck login status after closing login modal
     if (isPlatformBrowser(this.platformId)) {
       this.isLoggedIn = !!localStorage.getItem('token');
     }
@@ -43,12 +46,11 @@ export class TopBarComponent implements OnInit {
   handleLoginSuccess() {
     this.isLoggedIn = true;
   }
-  
 
   logout() {
     if (isPlatformBrowser(this.platformId)) {
-      localStorage.removeItem('token'); // ✅ Remove token on logout
+      localStorage.removeItem('token');
     }
-    this.isLoggedIn = false;  // ✅ Update UI
+    this.isLoggedIn = false;
   }
 }

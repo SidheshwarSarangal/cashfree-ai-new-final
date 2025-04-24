@@ -1,20 +1,3 @@
-/*import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { TopBarComponent } from './components/top-bar/top-bar.component';
-import { LeftSidebarComponent } from './components/left-sidebar/left-sidebar.component';
-import { HomeComponent } from './components/home/home.component';
-
-@Component({
-  selector: 'app-root',
-  imports: [RouterOutlet, TopBarComponent, LeftSidebarComponent, HomeComponent],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
-})
-export class AppComponent {
-  title = 'angular_front';
-}
-*/
-
 import { Component } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common'; // ⬅️ This is important
@@ -42,10 +25,11 @@ import { AudioComponent } from './components/audio/audio.component';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
+
 export class AppComponent {
   title = 'angular_front';
-
   currentComponent: 'text' | 'image' | 'audio' | 'home' = 'home';
+  isUserSubscribed = false;
 
   constructor(private router: Router) {
     this.router.events.subscribe(event => {
@@ -63,4 +47,12 @@ export class AppComponent {
       }
     });
   }
+
+  // app.component.ts
+  handleSubscribedStatus(status: boolean) {
+    this.isUserSubscribed = status;  // 👈 Store the subscription status
+    console.log("app",this.isUserSubscribed)
+  }
+
 }
+
