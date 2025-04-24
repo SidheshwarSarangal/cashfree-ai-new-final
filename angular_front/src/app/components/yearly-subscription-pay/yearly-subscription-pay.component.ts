@@ -15,11 +15,15 @@ import { ChangeDetectorRef } from '@angular/core';
 })
 export class YearlySubscriptionPayComponent {
 
+
   @Input() email!: string;  // Input property to receive email
   @Input() name!: string;   // Input property to receive name
+  @Input() _id!: string;
 
   subscriptionForm: FormGroup;
   initiated = true;
+  initiateButtonDisabled = false;
+  proceedButtonDisabled = false;
   paymentMethod = false;
   result = false;
   finalResultSuccess = false;
@@ -27,7 +31,7 @@ export class YearlySubscriptionPayComponent {
   selectedBankName = 'HDFC Bank'; // this should come from previous step
   subscriptionIdCreated = '';
   payment_method: any;
-  amount = 1500;
+  amount = 200;
 
 
   enachForm: FormGroup;
@@ -48,7 +52,7 @@ export class YearlySubscriptionPayComponent {
     this.subscriptionForm = this.fb.group({
       phone: ['', [Validators.required, Validators.pattern(/^[6-9]\d{9}$/)]],
       accountHolder: ['', [Validators.required]],
-      accountNumber: ['', [Validators.required, Validators.pattern(/^\d{8,}$/)]],
+      accountNumber: ['', [Validators.required, Validators.pattern(/^\d{9,}$/)]],
       ifsc: ['', [
         Validators.required,
         Validators.pattern(/^[A-Za-z]{4}0[A-Za-z0-9]{6}$/) // IFSC pattern
@@ -79,6 +83,7 @@ export class YearlySubscriptionPayComponent {
   initiateManually() {
     if (this.subscriptionForm.valid) {
       const payload = this.subscriptionForm.value;
+      this.initiateButtonDisabled = true;
       this.onInitiateSubmit();
       console.log('✅ Initiating manually with:', payload);
       this.selectedBankName = payload.bankCode;
@@ -93,6 +98,7 @@ export class YearlySubscriptionPayComponent {
   goBack1() {
     this.paymentMethod = false;
     this.initiated = true;
+    this.initiateButtonDisabled = false;
   }
 
   selectedMethod: 'upi' | 'enach' | 'card' | null = null;
@@ -105,29 +111,63 @@ export class YearlySubscriptionPayComponent {
   }
 
 
-  createPaymentPayload(payment_method: any) {
-    const payload = {
-      subscription_id: this.subscriptionIdCreated,
-      payment_amount: this.amount,
-      payment_schedule_date: new Date().toISOString(),
-      payment_remarks: 'Payment process undergoing',
-      payment_type: 'AUTH',
-      payment_method: payment_method
-    };
+  async createPaymentPayload(payment_method: any) {
+    try {
 
-    console.log("Generated Payload:", payload);
+      this.proceedButtonDisabled = true;
+      const payload = {
+        subscription_id: this.subscriptionIdCreated,
+        payment_amount: this.amount,
+        payment_schedule_date: new Date().toISOString(),
+        payment_remarks: 'Payment process undergoing',
+        payment_type: 'AUTH',
+        payment_method: payment_method
+      };
 
-    axios.post('http://localhost:5000/api/subscription/pay', payload)
-      .then((response) => {
-        console.log('✅ Payment success:', response.data);
-        this.result = false;
-        this.finalResultSuccess = true;
-      })
-      .catch((error) => {
-        console.error('❌ Payment failed:', error.response?.data || error.message);
-        this.result = false;
-        this.finalResultFailed = true;
-      });
+      console.log("Generated Payload:", payload);
+
+      const response = await axios.post('http://localhost:5000/api/subscription/pay', payload);
+      console.log('✅ Payment success url:', response.data);
+      const refundRedirectUrl = response.data?.data?.data?.url;
+      if (refundRedirectUrl) {
+        window.open(refundRedirectUrl, '_blank');
+      }
+
+      this.result = false;
+      this.finalResultSuccess = true;
+
+      if (response.data.data.data.url) {
+        console.log("yes-redirecting");
+
+        const currentDate = new Date();
+        const subscriptionExpiresAt = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth() + 1,
+          currentDate.getDate()
+        );
+
+        const updatePayload = {
+          userId: this._id,
+          subscriptionId: response.data.data.subscription_id || 'sub_test_id',
+          paymentId: response.data.data.payment_id,
+          cfPaymentId: response.data.data.cf_payment_id,
+          subscriptionType: "1500",
+          subscriptionStartsAt: currentDate.toISOString(),
+          subscriptionExpiresAt: subscriptionExpiresAt.toISOString()
+        };
+
+        await axios.post('http://localhost:5000/api/auth/updateSubscriptionStatus', updatePayload);
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error('❌ Axios error occurred:', error.response?.data || error.message);
+      } else {
+        console.error('❌ Unknown error occurred:', error);
+      }
+
+      this.result = false;
+      this.finalResultFailed = true;
+    }
   }
 
   goBack2() {
@@ -159,20 +199,20 @@ export class YearlySubscriptionPayComponent {
           customer_bank_account_type: this.subscriptionForm.value.accountType
         },
         plan_details: {
-          plan_id: 'plan_500_Quarterly',
-          plan_name: 'Premium Quarterly Plan',
+          plan_id: 'plan_1500_yearly',
+          plan_name: 'Premium Monthly Plan',
           plan_type: 'PERIODIC',
-          plan_max_cycles: 4,
+          plan_max_cycles: 12,
           plan_recurring_amount: 1500,
-          plan_max_amount: 1500,
+          plan_max_amount: 6000,
           plan_interval_type: 'MONTH',
-          plan_intervals: 12,
+          plan_intervals: 1,
           plan_currency: 'INR',
-          plan_note: 'Premium subscription with Rs 1500 yearly billing for up to 1 time',
+          plan_note: 'Premium subscription with Rs 1500 yearly billing once',
           plan_status: 'ACTIVE'
         },
         authorization_details: {
-          authorization_amount: 1,
+          authorization_amount: 200,
           authorization_amount_refund: false,
           authorization_reference: null,
           authorization_time: new Date().toISOString(),
@@ -293,6 +333,8 @@ export class YearlySubscriptionPayComponent {
     console.log('Form Data (Valid):', this.upiForm.value);
     this.createPaymentPayload(payment_method);
   }
+
+
 
 
 }

@@ -126,7 +126,11 @@ export class MonthlySubscriptionPayComponent {
       console.log("Generated Payload:", payload);
 
       const response = await axios.post('http://localhost:5000/api/subscription/pay', payload);
-      console.log('✅ Payment success:', response.data.data.data.url);
+      console.log('✅ Payment success url:', response.data);
+      const refundRedirectUrl = response.data?.data?.data?.url;
+      if (refundRedirectUrl) {
+        window.open(refundRedirectUrl, '_blank');
+      }
 
       this.result = false;
       this.finalResultSuccess = true;

@@ -144,13 +144,15 @@
         <p *ngIf="quarter">
           <app-quarternary-subscription-pay
             [email]="email"
-            [name]="userName">
+            [name]="userName"
+            [_id]="_id">
           </app-quarternary-subscription-pay>
         </p>
         <p *ngIf="year">
           <app-yearly-subscription-pay
             [email]="email"
-            [name]="userName">
+            [name]="userName"
+            [_id]="_id"> 
           </app-yearly-subscription-pay>
         </p>
         <button
