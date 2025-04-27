@@ -5,8 +5,10 @@ Watch the full working video here [Worrkig Video](https://drive.google.com/file/
 
 ## Idea of this project
 
-It is an AI-Powered project which is does AI translations and AI-image analysis, integrated with CASHFREE PAYMENT GATEWAY
+It is an AI-Powered project which is does AI translations and AI-image analysis, integrated with CASHFREE PAYMENT GATEWAY.
+
 I am a MERN stack developer but I just wanted to learn a new Framework, since in software development you can be asked at any time to learn new technology. So, I learned Angular and integrated cloudinary(for image analysis), cashfree payment gateway(for hadling subscriptions) and groq apis(for handling groq translation and image analysis work). Basically, I integrated 4 new technologies in one project.
+
 If you want then you can look at my MERN stack project here- [link](https://github.com/SidheshwarSarangal/social-media-website.git)
 
 ## How to Run?
