@@ -14,9 +14,15 @@ If you want then you can look at my MERN stack project here- [link](https://gith
 ## How to Run?
 
 Just clone this repository using 
+
 ``` gut clone [clone link]```
+
 then go to angular_front and do
+
 ``` npm i ``` and ```ng serve```
+
 This will run frontend
+
 To run the backend, go to backend folder and do
+
 ``` npm i ``` and ```npm i```
