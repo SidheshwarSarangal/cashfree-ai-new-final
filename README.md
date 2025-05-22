@@ -42,4 +42,4 @@ This will run frontend
 
 To run the backend, go to backend folder and do
 
-``` npm i ``` and ```npm i```
+``` npm i ``` and ```npm start```
