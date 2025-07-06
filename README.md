@@ -32,7 +32,7 @@ If you'd like to explore my work with the MERN stack, check out this project:
 
 Just clone this repository using 
 
-``` gut clone [clone link]```
+``` git clone [clone link]```
 
 then go to angular_front and do
 
