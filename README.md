@@ -1,105 +1,127 @@
 # AI Translation & Image Analysis Platform
 
-An all-in-one AI assistant that helps people translate text and speech, listen to translated content, and understand images. Access is managed through Cashfree subscription plans.
+**Cashfree-powered subscriptions unlock a single toolkit for AI translation, speech, and image understanding.**
 
-> This repository is a working demonstration project. Payments use the Cashfree Sandbox, so it is not currently a production payment service.
+> Demo project · Cashfree Sandbox · Not production payments
 
-## 1. The core idea
-
-The project combines its two main selling points into one experience:
-
-| 🧠 AI-powered experience | 💳 Cashfree payment gateway |
-|---|---|
-| Translates written text between languages | Offers monthly, quarterly, and yearly plans |
-| Converts translated text into natural speech | Creates and manages subscription payments |
-| Translates recorded voice into text | Supports UPI, eNACH, and card-related payment flows |
-| Examines an uploaded image and explains its contents | Connects the payment flow with subscriber access |
+## The product
 
 ```mermaid
 flowchart LR
-    User[User] --> Cashfree[Cashfree subscription]
-    Cashfree --> Access[Subscriber access]
+    User((User)) --> Pay[Cashfree subscription]
+    Pay --> Access[Subscriber access]
     Access --> AI{AI toolkit}
-    AI --> Text[Text translation]
-    AI --> Speech[Speech translation + playback]
-    AI --> Image[Image understanding]
+
+    AI --> Text[Translate text]
+    AI --> Voice[Translate voice]
+    AI --> Listen[Generate speech]
+    AI --> Image[Understand images]
+
+    style Pay fill:#635bff,color:#fff
+    style AI fill:#16a34a,color:#fff
 ```
 
-**Cashfree handles the subscription flow, and the AI toolkit delivers the subscriber experience.**
-
-## 2. How someone uses it
+## User journey
 
 ```mermaid
 flowchart LR
-    Visit[Visit the app] --> Account[Create account or log in]
-    Account --> Plan[Choose a Cashfree subscription plan]
-    Plan --> Tools[Unlock the AI toolkit]
-    Tools --> Choice{Choose a task}
-    Choice --> Text[Translate text]
-    Choice --> Voice[Translate speech]
-    Choice --> Image[Understand an image]
+    Visit[Visit] --> Account[Sign up / Log in]
+    Account --> Verify[Email OTP]
+    Verify --> Plan[Choose plan]
+    Plan --> Gateway[Cashfree payment]
+    Gateway --> Unlock[Unlock AI tools]
+    Unlock --> Use[Translate / Listen / Analyse]
 ```
 
-1. The user creates an account using email verification or logs in.
-2. The user selects a subscription plan and completes the Cashfree payment flow.
-3. Subscriber access unlocks the AI tools.
-4. The user chooses text, speech, or image assistance.
+## AI toolkit
 
-## 3. What the AI toolkit provides
+```mermaid
+flowchart TD
+    Toolkit{AI toolkit}
 
-| Feature | In simple words |
-|---|---|
-| Text translation | Enter text, choose languages, and receive a translation. |
-| Read translations aloud | Listen to translated text as generated speech. |
-| Speech translation | Record your voice and receive translated text. |
-| Image understanding | Upload an image and receive an AI-generated description. |
+    Toolkit --> T[Text]
+    T --> T1[Choose languages]
+    T1 --> T2[Translate]
+    T2 --> T3[Listen]
 
-## 4. Who is it for?
+    Toolkit --> A[Audio]
+    A --> A1[Record voice]
+    A1 --> A2[Translate speech]
+    A2 --> A3[Play result]
 
-- People communicating across different languages
-- Students and professionals working with multilingual content
-- Anyone who prefers listening instead of reading
-- Users who want a quick explanation of an image
-- Developers exploring AI services and subscription payments in one project
+    Toolkit --> I[Image]
+    I --> I1[Upload image]
+    I1 --> I2[AI description]
+```
 
-## 5. See it in action
+## Subscription experience
 
-▶️ [Watch the working demo video](https://drive.google.com/file/d/1IH2008CVZ6tj2KDCoMRpZgcPchyR0jQv/view)
+```mermaid
+sequenceDiagram
+    actor User
+    participant App
+    participant Cashfree
+    participant AI as AI Toolkit
 
-## 6. Explore the documentation
+    User->>App: Select monthly / quarterly / yearly
+    App->>Cashfree: Start subscription flow
+    Cashfree-->>App: Payment response
+    App-->>User: Subscriber access
+    User->>AI: Use text, audio and image tools
+```
 
-| Guide | Contains |
-|---|---|
-| [Architecture](docs/architecture.md) | System, frontend components, repository map |
-| [User and AI flows](docs/user-flows.md) | Login, subscription gate, text, audio and image flows |
-| [Subscriptions](docs/subscriptions.md) | Cashfree payment sequence and plans |
-| [API and data](docs/api-and-data.md) | Express endpoints and MongoDB models |
-| [Local setup](docs/setup.md) | Environment variables and run commands |
-| [Current implementation](docs/current-implementation.md) | Known gaps before production |
+| Monthly | Quarterly | Yearly |
+|---:|---:|---:|
+| ₹200 | ₹500 | ₹1500 |
 
-## 7. How it works behind the scenes
+## Who it helps
 
 ```mermaid
 flowchart LR
-    User --> Angular[Angular website]
-    Angular --> Express[Express server]
-    Express --> MongoDB[(User database)]
+    App[One AI application] --> Languages[Multilingual communication]
+    App --> Study[Study and work]
+    App --> Audio[Listen instead of read]
+    App --> Visual[Understand image content]
+    App --> Learn[Explore AI + payments]
+```
+
+## See it in action
+
+▶️ **[Watch the working demo](https://drive.google.com/file/d/1IH2008CVZ6tj2KDCoMRpZgcPchyR0jQv/view)**
+
+## Documentation map
+
+| Start here | Go deeper |
+|---|---|
+| [Architecture](docs/architecture.md) | [API and data](docs/api-and-data.md) |
+| [User and AI flows](docs/user-flows.md) | [Local setup](docs/setup.md) |
+| [Subscriptions](docs/subscriptions.md) | [Current implementation](docs/current-implementation.md) |
+
+## Behind the scenes
+
+```mermaid
+flowchart LR
+    Browser --> Angular
+    Angular --> Express
+    Express --> MongoDB[(MongoDB)]
     Express --> Groq[Groq AI]
-    Express --> Cloudinary[Temporary images]
-    Express --> Gmail[Email verification]
+    Express --> Cloudinary
+    Express --> Gmail[Email OTP]
     Express --> Cashfree[Cashfree Sandbox]
 ```
 
-The website sends each request to its server. The server coordinates accounts, AI services, temporary image storage, email verification, and demonstration payments.
-
-## 8. Quick start for developers
+## Run locally
 
 ```bash
-# Terminal 1
-cd backend && npm install && npm start
-
-# Terminal 2
-cd angular_front && npm install && npm start
+cd backend
+npm install
+npm start
 ```
 
-Open `http://localhost:4200`. The frontend expects the backend on `http://localhost:5000`. See [Local setup](docs/setup.md) for the required `.env` values.
+```bash
+cd angular_front
+npm install
+npm start
+```
+
+Open `http://localhost:4200`; the API is expected on `http://localhost:5000`. See [Local setup](docs/setup.md) for `.env` configuration.
