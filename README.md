@@ -2,9 +2,13 @@
 
 **Cashfree-powered subscriptions unlock a single toolkit for AI translation, speech, and image understanding.**
 
+The platform demonstrates how useful AI services can be packaged as a subscription product. Users manage access through Cashfree and then use all supported AI tools from one account.
+
 > Demo project · Cashfree Sandbox · Not production payments
 
 ## The product
+
+The project has two connected parts: Cashfree provides the subscription journey, while the AI toolkit provides the value users receive after subscribing.
 
 ```mermaid
 flowchart LR
@@ -21,7 +25,11 @@ flowchart LR
     style AI fill:#16a34a,color:#fff
 ```
 
+This connection between **paid access** and **practical AI features** is the central idea of the project.
+
 ## User journey
+
+The experience is designed as one continuous path, from account verification to payment and finally to the AI tools.
 
 ```mermaid
 flowchart LR
@@ -33,7 +41,11 @@ flowchart LR
     Unlock --> Use[Translate / Listen / Analyse]
 ```
 
+Email OTP verifies new accounts. The user then chooses a plan, completes the Cashfree flow, and receives subscriber access.
+
 ## AI toolkit
+
+The toolkit supports three everyday input types—written text, recorded voice, and images—without requiring the user to switch applications.
 
 ```mermaid
 flowchart TD
@@ -54,7 +66,13 @@ flowchart TD
     I1 --> I2[AI description]
 ```
 
+- **Text:** translate between selected languages and hear the result.
+- **Audio:** record speech, convert it to translated text, and play it aloud.
+- **Image:** upload a picture and receive an AI-generated explanation.
+
 ## Subscription experience
+
+Cashfree Sandbox is used to demonstrate recurring-plan creation and payment authorization. The current plans are presented as follows:
 
 ```mermaid
 sequenceDiagram
@@ -74,7 +92,11 @@ sequenceDiagram
 |---:|---:|---:|
 | ₹200 | ₹500 | ₹1500 |
 
+The application connects the subscription response with the user’s access status. Production payment verification is not yet implemented; see [Current implementation](docs/current-implementation.md).
+
 ## Who it helps
+
+The concept is useful wherever language, audio accessibility, or quick visual understanding can reduce effort.
 
 ```mermaid
 flowchart LR
@@ -85,11 +107,15 @@ flowchart LR
     App --> Learn[Explore AI + payments]
 ```
 
+It also serves as a reference project for developers learning how AI integrations and a payment gateway can work together.
+
 ## See it in action
 
 ▶️ **[Watch the working demo](https://drive.google.com/file/d/1IH2008CVZ6tj2KDCoMRpZgcPchyR0jQv/view)**
 
 ## Documentation map
+
+The README gives the product overview. These smaller guides contain the technical and implementation details:
 
 | Start here | Go deeper |
 |---|---|
@@ -98,6 +124,8 @@ flowchart LR
 | [Subscriptions](docs/subscriptions.md) | [Current implementation](docs/current-implementation.md) |
 
 ## Behind the scenes
+
+Angular provides the user interface, while the Express server coordinates the database and external services.
 
 ```mermaid
 flowchart LR
@@ -110,7 +138,11 @@ flowchart LR
     Express --> Cashfree[Cashfree Sandbox]
 ```
 
+Groq powers translation, speech, and image analysis; Cloudinary temporarily hosts images; MongoDB stores users and subscription data.
+
 ## Run locally
+
+Run the backend and frontend in separate terminals:
 
 ```bash
 cd backend
