@@ -4,6 +4,27 @@ An all-in-one AI assistant that helps people translate text and speech, listen t
 
 > This repository is a working demonstration project. Payments use the Cashfree Sandbox, so it is not currently a production payment service.
 
+## Two technologies, one complete product
+
+| 🧠 AI-powered experience | 💳 Cashfree payment gateway |
+|---|---|
+| Translates written text between languages | Offers monthly, quarterly, and yearly plans |
+| Converts translated text into natural speech | Creates and manages subscription payments |
+| Translates recorded voice into text | Supports UPI, eNACH, and card-related payment flows |
+| Examines an uploaded image and explains its contents | Connects the payment flow with subscriber access |
+
+```mermaid
+flowchart LR
+    User[User] --> Cashfree[Cashfree subscription]
+    Cashfree --> Access[Subscriber access]
+    Access --> AI{AI toolkit}
+    AI --> Text[Text translation]
+    AI --> Speech[Speech translation + playback]
+    AI --> Image[Image understanding]
+```
+
+The key idea is not just adding AI features or accepting a payment. The project connects both: **Cashfree handles the subscription flow, and the AI toolkit delivers the subscriber experience.**
+
 ## What can it do?
 
 | Feature | In simple words |
@@ -20,8 +41,8 @@ An all-in-one AI assistant that helps people translate text and speech, listen t
 ```mermaid
 flowchart LR
     Visit[Visit the app] --> Account[Create account or log in]
-    Account --> Plan[Choose a subscription plan]
-    Plan --> Tools[Open the AI tools]
+    Account --> Plan[Choose a Cashfree subscription plan]
+    Plan --> Tools[Unlock the AI toolkit]
     Tools --> Choice{Choose a task}
     Choice --> Text[Translate text]
     Choice --> Voice[Translate speech]
