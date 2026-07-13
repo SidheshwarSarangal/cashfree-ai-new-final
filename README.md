@@ -27,22 +27,6 @@ flowchart LR
 
 This connection between **paid access** and **practical AI features** is the central idea of the project.
 
-## User journey
-
-The experience is designed as one continuous path, from account verification to payment and finally to the AI tools.
-
-```mermaid
-flowchart LR
-    Visit[Visit] --> Account[Sign up / Log in]
-    Account --> Verify[Email OTP]
-    Verify --> Plan[Choose plan]
-    Plan --> Gateway[Cashfree payment]
-    Gateway --> Unlock[Unlock AI tools]
-    Unlock --> Use[Translate / Listen / Analyse]
-```
-
-Email OTP verifies new accounts. The user then chooses a plan, completes the Cashfree flow, and receives subscriber access.
-
 ## AI toolkit
 
 The toolkit supports three everyday input types—written text, recorded voice, and images—without requiring the user to switch applications.
@@ -94,6 +78,22 @@ sequenceDiagram
 
 The application connects the subscription response with the user’s access status. Production payment verification is not yet implemented; see [Current implementation](docs/current-implementation.md).
 
+## User journey
+
+The experience is designed as one continuous path, from account verification to payment and finally to the AI tools.
+
+```mermaid
+flowchart LR
+    Visit[Visit] --> Account[Sign up / Log in]
+    Account --> Verify[Email OTP]
+    Verify --> Plan[Choose plan]
+    Plan --> Gateway[Cashfree payment]
+    Gateway --> Unlock[Unlock AI tools]
+    Unlock --> Use[Translate / Listen / Analyse]
+```
+
+Email OTP verifies new accounts. The user then chooses a plan, completes the Cashfree flow, and receives subscriber access.
+
 ## Who it helps
 
 The concept is useful wherever language, audio accessibility, or quick visual understanding can reduce effort.
@@ -113,16 +113,6 @@ It also serves as a reference project for developers learning how AI integration
 
 ▶️ **[Watch the working demo](https://drive.google.com/file/d/1IH2008CVZ6tj2KDCoMRpZgcPchyR0jQv/view)**
 
-## Documentation map
-
-The README gives the product overview. These smaller guides contain the technical and implementation details:
-
-| Start here | Go deeper |
-|---|---|
-| [Architecture](docs/architecture.md) | [API and data](docs/api-and-data.md) |
-| [User and AI flows](docs/user-flows.md) | [Local setup](docs/setup.md) |
-| [Subscriptions](docs/subscriptions.md) | [Current implementation](docs/current-implementation.md) |
-
 ## Behind the scenes
 
 Angular provides the user interface, while the Express server coordinates the database and external services.
@@ -139,6 +129,16 @@ flowchart LR
 ```
 
 Groq powers translation, speech, and image analysis; Cloudinary temporarily hosts images; MongoDB stores users and subscription data.
+
+## Documentation map
+
+The README gives the product overview. These smaller guides contain the technical and implementation details:
+
+| Start here | Go deeper |
+|---|---|
+| [Architecture](docs/architecture.md) | [API and data](docs/api-and-data.md) |
+| [User and AI flows](docs/user-flows.md) | [Local setup](docs/setup.md) |
+| [Subscriptions](docs/subscriptions.md) | [Current implementation](docs/current-implementation.md) |
 
 ## Run locally
 
