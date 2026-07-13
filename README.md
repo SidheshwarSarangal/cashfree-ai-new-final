@@ -1,10 +1,12 @@
 # AI Translation & Image Analysis Platform
 
-An all-in-one AI assistant that helps people translate text and speech, listen to translated content, and understand images. Access is managed through simple subscription plans.
+An all-in-one AI assistant that helps people translate text and speech, listen to translated content, and understand images. Access is managed through Cashfree subscription plans.
 
 > This repository is a working demonstration project. Payments use the Cashfree Sandbox, so it is not currently a production payment service.
 
-## Two technologies, one complete product
+## 1. The core idea
+
+The project combines its two main selling points into one experience:
 
 | 🧠 AI-powered experience | 💳 Cashfree payment gateway |
 |---|---|
@@ -23,20 +25,9 @@ flowchart LR
     AI --> Image[Image understanding]
 ```
 
-The key idea is not just adding AI features or accepting a payment. The project connects both: **Cashfree handles the subscription flow, and the AI toolkit delivers the subscriber experience.**
+**Cashfree handles the subscription flow, and the AI toolkit delivers the subscriber experience.**
 
-## What can it do?
-
-| Feature | In simple words |
-|---|---|
-| Text translation | Enter text, choose languages, and receive a translation. |
-| Read translations aloud | Listen to translated text as generated speech. |
-| Speech translation | Record your voice and receive translated text. |
-| Image understanding | Upload an image and receive an AI-generated description. |
-| Account access | Sign up securely using an email verification code. |
-| Subscriptions | Choose a monthly, quarterly, or yearly demonstration plan. |
-
-## How someone uses it
+## 2. How someone uses it
 
 ```mermaid
 flowchart LR
@@ -49,7 +40,21 @@ flowchart LR
     Choice --> Image[Understand an image]
 ```
 
-## Who is it for?
+1. The user creates an account using email verification or logs in.
+2. The user selects a subscription plan and completes the Cashfree payment flow.
+3. Subscriber access unlocks the AI tools.
+4. The user chooses text, speech, or image assistance.
+
+## 3. What the AI toolkit provides
+
+| Feature | In simple words |
+|---|---|
+| Text translation | Enter text, choose languages, and receive a translation. |
+| Read translations aloud | Listen to translated text as generated speech. |
+| Speech translation | Record your voice and receive translated text. |
+| Image understanding | Upload an image and receive an AI-generated description. |
+
+## 4. Who is it for?
 
 - People communicating across different languages
 - Students and professionals working with multilingual content
@@ -57,19 +62,11 @@ flowchart LR
 - Users who want a quick explanation of an image
 - Developers exploring AI services and subscription payments in one project
 
-## The idea in one picture
+## 5. See it in action
 
-```mermaid
-flowchart LR
-    Person[Person] --> App[AI assistant]
-    App --> Language[Break language barriers]
-    App --> Accessibility[Turn text into speech]
-    App --> Understanding[Explain images]
-```
+▶️ [Watch the working demo video](https://drive.google.com/file/d/1IH2008CVZ6tj2KDCoMRpZgcPchyR0jQv/view)
 
-The application brings these tools into one account instead of making the user switch between several services.
-
-## Documentation
+## 6. Explore the documentation
 
 | Guide | Contains |
 |---|---|
@@ -80,24 +77,22 @@ The application brings these tools into one account instead of making the user s
 | [Local setup](docs/setup.md) | Environment variables and run commands |
 | [Current implementation](docs/current-implementation.md) | Known gaps before production |
 
-## How it works behind the scenes
+## 7. How it works behind the scenes
 
 ```mermaid
 flowchart LR
-    User --> Angular
-    Angular --> Express
-    Express --> MongoDB
-    Express --> Groq
-    Express --> Cloudinary
-    Express --> Gmail
+    User --> Angular[Angular website]
+    Angular --> Express[Express server]
+    Express --> MongoDB[(User database)]
+    Express --> Groq[Groq AI]
+    Express --> Cloudinary[Temporary images]
+    Express --> Gmail[Email verification]
     Express --> Cashfree[Cashfree Sandbox]
 ```
 
-The website sends each request to its server. The server coordinates the user database, AI services, temporary image storage, email verification, and demonstration payments.
+The website sends each request to its server. The server coordinates accounts, AI services, temporary image storage, email verification, and demonstration payments.
 
-> [Working demo video](https://drive.google.com/file/d/1IH2008CVZ6tj2KDCoMRpZgcPchyR0jQv/view)
-
-## Quick start
+## 8. Quick start for developers
 
 ```bash
 # Terminal 1
@@ -107,4 +102,4 @@ cd backend && npm install && npm start
 cd angular_front && npm install && npm start
 ```
 
-The frontend expects Angular on `:4200` and the backend on `:5000`. See [Local setup](docs/setup.md) for the required `.env` values.
+Open `http://localhost:4200`. The frontend expects the backend on `http://localhost:5000`. See [Local setup](docs/setup.md) for the required `.env` values.
